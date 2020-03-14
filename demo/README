@@ -1,0 +1,13 @@
+[Server - Database] Configuration for database:
+
+Modurile de conexiune la baza de date implementate sunt:
+	-> using public IP address (whitelisting);
+	-> using JDBC Socket Factory;
+Link referinta: https://cloud.google.com/sql/docs/mysql/connect-external-app
+
+Pentru JDBC Socket Factory pasii ce trebuie urmati sunt:
+	-> enable the Cloud SQL API;
+	-> install and authenticate with Cloud SDK;
+
+Pentru testare accesati:
+	-> localhost:8080/listUsers
