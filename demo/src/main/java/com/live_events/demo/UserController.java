@@ -20,26 +20,35 @@ public class UserController {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @RequestMapping(value="/createUser", method = RequestMethod.GET)
-    public void createUser(@RequestParam(value = "id", defaultValue = "1234") int id,
-                           @RequestParam(value = "name", defaultValue = "Admin") int name,
-                           @RequestParam(value = "address", defaultValue = "Iuliu Maniu") int address,
-                           @RequestParam(value = "mobile", defaultValue = "0") int mobile,
-                           @RequestParam(value = "email", defaultValue = "admin@gmail.com") int email) {
+    @RequestMapping(value = "/createUser", method = RequestMethod.POST)
+    public void createUser(@RequestParam(value = "id", defaultValue = "1234") String id,
+                           @RequestParam(value = "name", defaultValue = "Admin") String name,
+                           @RequestParam(value = "address", defaultValue = "Iuliu Maniu") String address,
+                           @RequestParam(value = "mobile", defaultValue = "0") String mobile,
+                           @RequestParam(value = "email", defaultValue = "admin@gmail.com") String email) {
         this.jdbcTemplate.update("INSERT into Users values(?, ?, ?, ?, ?)", id, name, address, mobile, email);
     }
 
-    @RequestMapping(value="/updateUser", method = RequestMethod.POST)
-    public void updateUser() {
-
+    @RequestMapping(value = "/updateUser", method = RequestMethod.PUT)
+    public void updateUser(@RequestParam(value = "id", defaultValue = "1234") String id,
+                           @RequestParam(value = "name", defaultValue = "Admin") String name,
+                           @RequestParam(value = "address", defaultValue = "Iuliu Maniu") String address,
+                           @RequestParam(value = "mobile", defaultValue = "0") String mobile,
+                           @RequestParam(value = "email", defaultValue = "admin@gmail.com") String email) {
+        this.jdbcTemplate.update("UPDATE Users Set Name = ?, Address = ?,  MobileNo = ?,  Email = ? WHERE Id = ?", name, address, mobile, email, id);
     }
 
-    @GetMapping("/fetchUser")
-    public void fetchUser() {
-
+    @RequestMapping(value = "/removeUser", method = RequestMethod.DELETE)
+    public void removeUser(@RequestParam(value = "id", defaultValue = "1234") String id) {
+        this.jdbcTemplate.update("DELETE FROM Users WHERE Id = ?", id);
     }
 
-    @RequestMapping(value="/listUsers", method = RequestMethod.GET)
+    @RequestMapping(value = "/fetchUser", method = RequestMethod.GET)
+    public List<Map<String, Object>> fetchUser(@RequestParam(value = "id", defaultValue = "1234") String id) {
+            return this.jdbcTemplate.queryForList("SELECT * FROM Users WHERE Id = ?", id);
+    }
+
+    @RequestMapping(value = "/listUsers", method = RequestMethod.GET)
     public List<Map<String, Object>> listUsers() {
         return this.jdbcTemplate.queryForList("SELECT * FROM Users;");
     }
