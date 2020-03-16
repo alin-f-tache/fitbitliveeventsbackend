@@ -22,32 +22,32 @@ public class EventController {
     @RequestMapping(value = "/createEvent", method = RequestMethod.POST)
     public void createEvent(@RequestParam(value = "id", defaultValue = "1234") String id,
                            @RequestParam(value = "location", defaultValue = "Bucuresti") String location,
-                           @RequestParam(value = "starttime", defaultValue = "11:00") @DateTimeFormat(pattern="HH:mm") Date starttime,
-                           @RequestParam(value = "endtime", defaultValue = "14:00") @DateTimeFormat(pattern="HH:mm") Date endtime,
-                           @RequestParam(value = "startpoint", defaultValue = "Herastrau") String startpoint,
-                           @RequestParam(value = "endpoint", defaultValue = "Cismigiu") String endpoint,
-                           @RequestParam(value = "participantsnumber", defaultValue = "10") String participantsnumber,
+                           @RequestParam(value = "starttime", defaultValue = "11:00") @DateTimeFormat(pattern="HH:mm") Date startTime,
+                           @RequestParam(value = "endtime", defaultValue = "14:00") @DateTimeFormat(pattern="HH:mm") Date endTime,
+                           @RequestParam(value = "startpoint", defaultValue = "Herastrau") String startPoint,
+                           @RequestParam(value = "endpoint", defaultValue = "Cismigiu") String endPoint,
+                           @RequestParam(value = "participantsnumber", defaultValue = "10") String participantsNumber,
                            @RequestParam(value = "description", defaultValue = "Maraton Herastrau - Cismigiu") String description,
                            @RequestParam(value = "date", defaultValue = "2020-01-01") @DateTimeFormat(pattern="yyyy-MM-dd") Date date,
-                           @RequestParam(value = "hashapenned", defaultValue = "0") String hashappened) {
-        this.jdbcTemplate.update("INSERT into Events values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                id, location, starttime, endtime, startpoint, endpoint, participantsnumber, description, date, hashappened);
+                           @RequestParam(value = "hashapenned", defaultValue = "0") String hasHappened) {
+        this.jdbcTemplate.update("INSERT INTO Events VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                id, location, startTime, endTime, startPoint, endPoint, participantsNumber, description, date, hasHappened);
     }
 
     @RequestMapping(value = "/updateEvent", method = RequestMethod.PUT)
     public void updateEvent(@RequestParam(value = "id", defaultValue = "1234") String id,
-                           @RequestParam(value = "location", defaultValue = "Bucuresti") String location,
-                           @RequestParam(value = "starttime", defaultValue = "11:00") @DateTimeFormat(pattern="HH:mm") Date starttime,
-                           @RequestParam(value = "endtime", defaultValue = "14:00") @DateTimeFormat(pattern="HH:mm") Date endtime,
-                           @RequestParam(value = "startpoint", defaultValue = "Herastrau") String startpoint,
-                           @RequestParam(value = "endpoint", defaultValue = "Cismigiu") String endpoint,
-                           @RequestParam(value = "participantsnumber", defaultValue = "10") String participantsnumber,
-                           @RequestParam(value = "description", defaultValue = "Maraton Herastrau - Cismigiu") String description,
-                           @RequestParam(value = "date", defaultValue = "2020-01-01") @DateTimeFormat(pattern="yyyy-MM-dd") Date date,
-                           @RequestParam(value = "hashapenned", defaultValue = "0") String hashappened) {
+                            @RequestParam(value = "location", defaultValue = "Bucuresti") String location,
+                            @RequestParam(value = "starttime", defaultValue = "11:00") @DateTimeFormat(pattern="HH:mm") Date startTime,
+                            @RequestParam(value = "endtime", defaultValue = "14:00") @DateTimeFormat(pattern="HH:mm") Date endTime,
+                            @RequestParam(value = "startpoint", defaultValue = "Herastrau") String startPoint,
+                            @RequestParam(value = "endpoint", defaultValue = "Cismigiu") String endPoint,
+                            @RequestParam(value = "participantsnumber", defaultValue = "10") String participantsNumber,
+                            @RequestParam(value = "description", defaultValue = "Maraton Herastrau - Cismigiu") String description,
+                            @RequestParam(value = "date", defaultValue = "2020-01-01") @DateTimeFormat(pattern="yyyy-MM-dd") Date date,
+                            @RequestParam(value = "hashapenned", defaultValue = "0") String hasHappened) {
         this.jdbcTemplate.update("UPDATE Events SET Id = ?, Location = ?, StartTime = ?, EndTime = ?, StartPoint = ?, " +
                         "EndPoint = ?, ParticipantsNumber = ?, Description = ?, Date = ?, HasHappened = ?",
-                id, location, starttime, endtime, startpoint, endpoint, participantsnumber, description, date, hashappened);
+                id, location, startTime, endTime, startPoint, endPoint, participantsNumber, description, date, hasHappened);
     }
 
     @RequestMapping(value = "/removeEvent", method = RequestMethod.DELETE)
