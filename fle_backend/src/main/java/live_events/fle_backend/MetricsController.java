@@ -66,6 +66,7 @@ class UnsafeOkHttpClient {
     }
 }
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 public class MetricsController {
     InfluxDB influxDB;

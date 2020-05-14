@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import java.util.List;
 import java.util.Map;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 public class UserRoleController {
     private final JdbcTemplate jdbcTemplate;
@@ -17,25 +18,41 @@ public class UserRoleController {
 
     @RequestMapping(value = "/addUserRole", method = RequestMethod.POST)
     public void addUserRole(@RequestParam(value = "eventid", defaultValue = "0000") String eventId,
-                            @RequestParam(value = "participantid", defaultValue = "1234") String participantId,
+                            @RequestParam(value = "username", defaultValue = "user_1") String username,
                             @RequestParam(value = "role", defaultValue = "organizer") String role) {
-        this.jdbcTemplate.update("INSERT into UsersRole values(?, ?, ?)", eventId, participantId, role);
+        this.jdbcTemplate.update("INSERT into UsersRole values(?, ?, ?)", eventId, username, role);
 
     }
 
     @RequestMapping(value = "/removeUserRole", method = RequestMethod.DELETE)
     public void removeUserRole(@RequestParam(value = "eventid", defaultValue = "0000") String eventId,
-                               @RequestParam(value = "participantid", defaultValue = "1234") String participantId,
+                               @RequestParam(value = "username", defaultValue = "user_1") String username,
                                @RequestParam(value = "role", defaultValue = "organizer") String role) {
-        this.jdbcTemplate.update("DELETE FROM UsersRole WHERE EventId = ? and ParticipantId = ? and Role = ?", eventId, participantId, role);
+        this.jdbcTemplate.update("DELETE FROM UsersRole WHERE EventId = ? and Username = ? and Role = ?", eventId, username, role);
     }
 
     @RequestMapping(value = "/listAllEvents", method = RequestMethod.GET)
-    public List<Map<String, Object>> listAllEvents(@RequestParam(value = "participantid", defaultValue = "1234") String participantId,
+    public List<Map<String, Object>> listAllEvents(@RequestParam(value = "username", defaultValue = "user_1") String username,
                                                    @RequestParam(value = "role", defaultValue = "all") String role) {
         if(role.equals("all")) {
-            return this.jdbcTemplate.queryForList("SELECT * FROM UsersRole WHERE ParticipantId = ?", participantId);
+            return this.jdbcTemplate.queryForList("SELECT * FROM UsersRole WHERE Username = ?", username);
         }
-        return this.jdbcTemplate.queryForList("SELECT * FROM UsersRole WHERE ParticipantId = ? and Role = ?", participantId, role);
+        return this.jdbcTemplate.queryForList("SELECT * FROM UsersRole WHERE Username = ? and Role = ?", username, role);
+    }
+
+    @RequestMapping(value = "/fetchUserPastEvents", method = RequestMethod.GET)
+    public List<Map<String, Object>> fetchUserPastEvents(@RequestParam(value = "usernem", defaultValue = "user_1") String username,
+                                                         @RequestParam(value = "role", defaultValue = "all") String role) {
+        return this.jdbcTemplate.queryForList("SELECT * FROM UsersRole u" +
+                                                    " JOIN Events e ON u.EventId =  e .Id" +
+                                                    " WHERE u.Username = ? AND u.Role = ? AND e.Date < CURDATE();", username, role);
+    }
+
+    @RequestMapping(value = "/fetchUserFutureEvents", method = RequestMethod.GET)
+    public List<Map<String, Object>> fetchUserFutureEvents(@RequestParam(value = "usernem", defaultValue = "user_1") String username,
+                                                         @RequestParam(value = "role", defaultValue = "all") String role) {
+        return this.jdbcTemplate.queryForList("SELECT * FROM UsersRole u" +
+                " JOIN Events e ON u.EventId =  e .Id" +
+                " WHERE u.Username = ? AND u.Role = ? AND e.Date > CURDATE();", username, role);
     }
 }
