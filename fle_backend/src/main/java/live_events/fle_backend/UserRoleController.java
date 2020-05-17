@@ -41,7 +41,7 @@ public class UserRoleController {
     }
 
     @RequestMapping(value = "/fetchUserPastEvents", method = RequestMethod.GET)
-    public List<Map<String, Object>> fetchUserPastEvents(@RequestParam(value = "usernem", defaultValue = "user_1") String username,
+    public List<Map<String, Object>> fetchUserPastEvents(@RequestParam(value = "username", defaultValue = "user_1") String username,
                                                          @RequestParam(value = "role", defaultValue = "all") String role) {
         return this.jdbcTemplate.queryForList("SELECT * FROM UsersRole u" +
                                                     " JOIN Events e ON u.EventId =  e .Id" +
@@ -49,7 +49,7 @@ public class UserRoleController {
     }
 
     @RequestMapping(value = "/fetchUserFutureEvents", method = RequestMethod.GET)
-    public List<Map<String, Object>> fetchUserFutureEvents(@RequestParam(value = "usernem", defaultValue = "user_1") String username,
+    public List<Map<String, Object>> fetchUserFutureEvents(@RequestParam(value = "username", defaultValue = "user_1") String username,
                                                          @RequestParam(value = "role", defaultValue = "all") String role) {
         return this.jdbcTemplate.queryForList("SELECT * FROM UsersRole u" +
                 " JOIN Events e ON u.EventId =  e .Id" +

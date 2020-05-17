@@ -29,9 +29,11 @@ public class EventController {
                            @RequestParam(value = "description", defaultValue = "Maraton Herastrau - Cismigiu") String description,
                            @RequestParam(value = "date", defaultValue = "2020-01-01") @DateTimeFormat(pattern="yyyy-MM-dd") Date date,
                            @RequestParam(value = "hashapenned", defaultValue = "0") String hasHappened,
-                              @RequestParam(value = "type", defaultValue = "Marathon") String type) {
+                              @RequestParam(value = "type", defaultValue = "Marathon") String type,
+                              @RequestParam(value = "username", defaultValue = "user_1") String username) {
         this.jdbcTemplate.update("INSERT INTO Events VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 id, title, city, street, number, startTime, endTime, participantsNumber, description, date, hasHappened, type);
+        this.jdbcTemplate.update("INSERT into UsersRole values(?, ?, ?)", id, username, "organizer");
         return "Succes";
     }
 
