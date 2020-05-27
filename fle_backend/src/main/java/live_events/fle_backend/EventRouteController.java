@@ -37,8 +37,9 @@ public class EventRouteController {
     }
 
     @RequestMapping(value = "/deleteEventRoute", method = RequestMethod.DELETE)
-    public void deleteEventRoute(@RequestParam(value = "id", defaultValue = "1234") String id) {
+    public String deleteEventRoute(@RequestParam(value = "id", defaultValue = "1234") String id) {
         this.jdbcTemplate.update("DELETE from EventRoute WHERE EventId=?", id);
+        return "Succes";
     }
 
 }
