@@ -36,4 +36,9 @@ public class EventRouteController {
         return this.jdbcTemplate.queryForList("SELECT * FROM EventRoute WHERE EventId = ? ORDER BY PointNumber", id);
     }
 
+    @RequestMapping(value = "/deleteEventRoute", method = RequestMethod.DELETE)
+    public void deleteEventRoute(@RequestParam(value = "id", defaultValue = "1234") String id) {
+        this.jdbcTemplate.update("DELETE from EventRoute WHERE EventId=?", id);
+    }
+
 }
