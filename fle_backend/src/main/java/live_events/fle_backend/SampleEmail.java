@@ -11,7 +11,7 @@ public class SampleEmail {
 
     @JsonCreator
     public SampleEmail(@JsonProperty("id") Integer id,
-                         @JsonProperty("email") String email) {
+                       @JsonProperty("email") String email) {
         this.id = id;
         this.email = email;
     }
