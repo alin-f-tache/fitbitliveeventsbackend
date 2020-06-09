@@ -20,9 +20,9 @@ public class Producer {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public void sendEmail(SampleEmail email) {
-        this.kafkaTemplate.send(topic, email.getEmail());
-        System.out.println("Sent sample message [" + email + "] to " + topic);
+    public void sendEmail(SampleMessage message) {
+        this.kafkaTemplate.send(topic, message.getMessage());
+        System.out.println("Sent sample message [" + message + "] to " + topic);
     }
 
 }

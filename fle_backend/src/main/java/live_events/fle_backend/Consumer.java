@@ -1,6 +1,7 @@
 package live_events.fle_backend;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.mail.SimpleMailMessage;
@@ -9,11 +10,18 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 
 @Component
 class Consumer {
     @Autowired
     private JavaMailSender javaMailSender;
+
+    private final JdbcTemplate jdbcTemplate;
+
+    public Consumer(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     void sendEmail(String email) {
 
@@ -34,7 +42,18 @@ class Consumer {
                                @Header(KafkaHeaders.RECEIVED_PARTITION_ID) List<Integer> partitions,
                                @Header(KafkaHeaders.RECEIVED_TOPIC) List<String> topics,
                                @Header(KafkaHeaders.OFFSET) List<Long> offsets) {
-        sendEmail(message);
+        if ("DELETE:".equals(message.split(" ")[0])) {
+            String id = message.split(" ")[1];
+            List<Map<String, Object>> emails = this.jdbcTemplate.queryForList("SELECT Email from Users u JOIN" +
+                    " UsersRole r on u.Username = r.Username and r.EventId = ? and r.Role != 'Organizer';", id);
+            for (int i = 0; i < emails.size(); i++) {
+                Map.Entry<String, Object> entry = emails.get(i).entrySet().iterator().next();
+                System.out.println(entry.getValue().toString());
+                sendEmail(entry.getValue().toString());
+            }
+            this.jdbcTemplate.update("DELETE from Events WHERE Id=?", id);
+            this.jdbcTemplate.update("DELETE from UsersRole WHERE EventId=?", id);
+        }
         System.out.println(message);
     }
 

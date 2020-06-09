@@ -30,7 +30,7 @@ public class EventController {
             if (time != null && time.equals("past")) {
                 return this.jdbcTemplate.queryForList("SELECT * FROM Events WHERE Date < CURDATE();");
             } else if (time != null && time.equals("future")) {
-                return this.jdbcTemplate.queryForList("SELECT * FROM Events WHERE Date < CURDATE();");
+                return this.jdbcTemplate.queryForList("SELECT * FROM Events WHERE Date > CURDATE();");
             } else {
                 return this.jdbcTemplate.queryForList("SELECT * FROM Events;");
             }
@@ -78,12 +78,7 @@ public class EventController {
 
     @DeleteMapping("/events")
     public String deleteEvent(@RequestParam(value = "id", defaultValue = "1234") String id) {
-        List<Map<String, Object>> emails = this.jdbcTemplate.queryForList("SELECT Email from Users u JOIN" +
-                                " UsersRole r on u.Username = r.Username and r.EventId = ? and r.Role != 'Organizer';", id);
-        for (int i = 0; i < emails.size(); i++) {
-            Map.Entry<String, Object> entry = emails.get(i).entrySet().iterator().next();
-            producer.sendEmail(new SampleEmail(i, entry.getValue().toString()));
-        }
+        producer.sendEmail(new SampleMessage(0, "DELETE: " + id));
         return "Succes";
     }
 }
