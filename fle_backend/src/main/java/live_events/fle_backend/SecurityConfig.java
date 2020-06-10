@@ -1,7 +1,9 @@
 package live_events.fle_backend;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -18,6 +20,9 @@ import java.util.Arrays;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Autowired
+    private Environment environment;
+
     @Value("${auth0.audience}")
     private String audience;
 
@@ -26,14 +31,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable()
-                .authorizeRequests()
-                .mvcMatchers("/authenticate").permitAll()
-                .mvcMatchers(HttpMethod.POST, "/users").permitAll()
-                .mvcMatchers(HttpMethod.GET, "/events").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .oauth2ResourceServer().jwt();
+        boolean testing = false;
+
+        for (String profile: this.environment.getActiveProfiles())
+            if (profile.equals("testenv")) {
+                testing = true;
+                break;
+            }
+
+        if (testing)
+            http.cors().and().csrf().disable()
+                    .authorizeRequests()
+                    .anyRequest().permitAll();
+        else
+            http.cors().and().csrf().disable()
+                    .authorizeRequests()
+                    .mvcMatchers("/authenticate").permitAll()
+                    .mvcMatchers(HttpMethod.POST, "/users").permitAll()
+                    .mvcMatchers(HttpMethod.GET, "/events").permitAll()
+                    .anyRequest().authenticated()
+                    .and()
+                    .oauth2ResourceServer().jwt();
     }
 
     @Bean

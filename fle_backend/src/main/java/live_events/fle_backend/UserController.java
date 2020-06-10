@@ -40,7 +40,7 @@ public class UserController {
                         @RequestParam(value = "address", defaultValue = "Iuliu Maniu") String address,
                         @RequestParam(value = "mobile", defaultValue = "0") String mobile,
                         @RequestParam(value = "email", defaultValue = "admin@gmail.com") String email) {
-        this.jdbcTemplate.update("UPDATE Users Set Name = ?, Address = ?,  MobileNo = ?,  Email = ? WHERE Usename = ?", name, address, mobile, email, username);
+        this.jdbcTemplate.update("UPDATE Users Set Name = ?, Address = ?,  MobileNo = ?,  Email = ? WHERE Username = ?", name, address, mobile, email, username);
     }
 
     @DeleteMapping("/users")
