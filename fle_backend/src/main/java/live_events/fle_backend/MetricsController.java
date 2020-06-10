@@ -22,38 +22,37 @@ public class MetricsController {
                 "https://34.106.36.59:8086/", "admin", "root", okHttpClient);
     }
 
-
-    @GetMapping("/metrics")
-    public String home() {
-        Pong response = this.influxDB.ping();
-        if (response.getVersion().equalsIgnoreCase("unknown")) {
-            return "Connection failed";
-        }
-        influxDB.createDatabase("metrics");
-        influxDB.createRetentionPolicy(
-                "defaultPolicy", "metrics", "60d", 1, true);
-        return "Succes";
-    }
+    /*
+    Currently using the following structure:
+    INFLUXDB:
+        - Database: metrics
+            - Measurement: user_metrics
+                - Tags: name=user_metrics
+                - Fields: username, heartrate, latitude, longitude, current_speed, average_speed
+     */
 
     @GetMapping("/userMetrics")
     public QueryResult getMetrics() {
-        Query queryMetrics = new Query("Select * from metrics", "metrics");
+        Query queryMetrics = new Query("Select * from user_metrics", "metrics");
 
-        QueryResult result  = influxDB.query(queryMetrics);
-        return result;
+        return influxDB.query(queryMetrics);
     }
 
     @PostMapping("/userMetrics")
-    public void postMetrics(@RequestParam(value = "id", defaultValue = "1234") String id,
-                              @RequestParam(value = "speed", defaultValue = "0") String speed,
-                              @RequestParam(value = "heartbeat", defaultValue = "70") String heartbeat,
-                              @RequestParam(value = "position", defaultValue = "null") String position) {
-        Point point = Point.measurement("metrics")
+    public void postMetrics(@RequestParam(value = "username") String username,
+                            @RequestParam(value = "heartrate") String heartrate,
+                            @RequestParam(value = "latitude") String latitude,
+                            @RequestParam(value = "longitude") String longitude,
+                            @RequestParam(value = "current_speed") String current_speed,
+                            @RequestParam(value = "average_speed") String average_speed) {
+        Point point = Point.measurement("user_metrics")
                 .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
-                .addField("id", id)
-                .addField("speed", speed)
-                .addField("heartbeat", heartbeat)
-                .addField("position", position)
+                .addField("username", username)
+                .addField("heartrate", heartrate)
+                .addField("latitude", latitude)
+                .addField("longitude", longitude)
+                .addField("current_speed", current_speed)
+                .addField("average_speed", average_speed)
                 .build();
 
         BatchPoints batchPoints = BatchPoints
