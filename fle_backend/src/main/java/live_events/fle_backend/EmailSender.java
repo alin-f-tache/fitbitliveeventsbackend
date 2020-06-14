@@ -42,8 +42,11 @@ public class EmailSender {
     @RequestMapping(value = "/sendInvitation", method = RequestMethod.POST)
     public String sendInvitation(@RequestParam(value = "email", defaultValue = "liveeventsteam@gmail.com") String email,
                                  @RequestParam(value = "role", defaultValue = "participant") String role,
-                                 @RequestParam(value = "link", defaultValue = "http://localhost:3000") String link) {
-        sendEmail(email, role, link);
+                                 @RequestParam(value = "link", defaultValue = "http://localhost:3000") String link,
+                                 @RequestParam(value = "invitation", defaultValue = "False") String invitation) {
+        System.out.println(link + "&invitation=" + invitation);
+        String invitationLInk = link + "&invitation=" + invitation;
+        sendEmail(email, role, invitationLInk);
         return "Succes";
     }
 }

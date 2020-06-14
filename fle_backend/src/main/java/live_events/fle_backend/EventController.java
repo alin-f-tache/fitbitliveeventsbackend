@@ -53,7 +53,7 @@ public class EventController {
                             @RequestParam(value = "username", defaultValue = "user_1") String username) {
         this.jdbcTemplate.update("INSERT INTO Events VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 id, title, city, street, number, startTime, endTime, participantsNumber, description, date, hasHappened, type);
-        this.jdbcTemplate.update("INSERT into UsersRole values(?, ?, ?)", id, username, "organizer");
+        this.jdbcTemplate.update("INSERT into UsersRole values(?, ?, ?, ?, ?)", id, username, "organizer", date, "0");
         return "Succes";
     }
 

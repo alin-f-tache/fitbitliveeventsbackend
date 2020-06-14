@@ -5,6 +5,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Date;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -19,7 +24,20 @@ public class UserRoleController {
     public List<Map<String, Object>> getUserRoles(@RequestParam(value = "username", required = false) String username,
                                                   @RequestParam(value = "role", required = false) String role,
                                                   @RequestParam(value = "id", required = false) String id,
-                                                  @RequestParam(value = "time", required = false) String time) {
+                                                  @RequestParam(value = "time", required = false) String time,
+                                                  @RequestParam(value = "month_distribution", required = false) String distribution_role,
+                                                  @RequestParam(value = "invitation_stats", required = false) String invitation_role) {
+        if (invitation_role != null) {
+            return this.jdbcTemplate.queryForList("SELECT *" +
+                    " from UsersRole WHERE EventId=? AND Role = ? AND Invitation=1", id, invitation_role);
+        }
+
+        if (distribution_role != null) {
+            return this.jdbcTemplate.queryForList("SELECT count(*) as Number, MONTH(Date) as Month" +
+                    " from UsersRole WHERE Username=? AND Role = ?" +
+                    " GROUP BY Date;", username, distribution_role);
+        }
+
         if (username != null && role != null && time != null) {
             if (time.equals("past")) {
                 return this.jdbcTemplate.queryForList("SELECT * FROM UsersRole u" +
@@ -51,8 +69,10 @@ public class UserRoleController {
     @PostMapping("/userRoles")
     public String postUserRole(@RequestParam(value = "eventid", defaultValue = "0000") String eventId,
                                @RequestParam(value = "username", defaultValue = "user_1") String username,
-                               @RequestParam(value = "role", defaultValue = "organizer") String role) {
-        this.jdbcTemplate.update("INSERT into UsersRole values(?, ?, ?)", eventId, username, role);
+                               @RequestParam(value = "role", defaultValue = "organizer") String role,
+                               @RequestParam(value = "date", defaultValue = "2020-01-01") String date,
+                               @RequestParam(value = "invitation", defaultValue = "False") String invitation) {
+        this.jdbcTemplate.update("INSERT into UsersRole values(?, ?, ?, ?, ?)", eventId, username, role, date, invitation);
         return "Succes";
     }
 
