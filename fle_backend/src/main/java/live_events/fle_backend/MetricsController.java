@@ -47,12 +47,12 @@ public class MetricsController {
                             @RequestParam(value = "average_speed") String average_speed) {
         Point point = Point.measurement("user_metrics")
                 .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
-                .addField("username", username)
                 .addField("heartrate", Integer.valueOf(heartrate))
                 .addField("latitude", Float.valueOf(latitude))
                 .addField("longitude", Float.valueOf(longitude))
                 .addField("current_speed", Float.valueOf(current_speed))
                 .addField("average_speed", Float.valueOf(average_speed))
+                .tag("username", username)
                 .build();
 
         BatchPoints batchPoints = BatchPoints

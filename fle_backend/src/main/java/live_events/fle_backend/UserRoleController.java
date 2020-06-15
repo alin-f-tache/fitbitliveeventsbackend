@@ -71,7 +71,7 @@ public class UserRoleController {
                                @RequestParam(value = "username", defaultValue = "user_1") String username,
                                @RequestParam(value = "role", defaultValue = "organizer") String role,
                                @RequestParam(value = "date", defaultValue = "2020-01-01") String date,
-                               @RequestParam(value = "invitation", defaultValue = "False") String invitation) {
+                               @RequestParam(value = "invitation", defaultValue = "0") String invitation) {
         this.jdbcTemplate.update("INSERT into UsersRole values(?, ?, ?, ?, ?)", eventId, username, role, date, invitation);
         return "Succes";
     }
