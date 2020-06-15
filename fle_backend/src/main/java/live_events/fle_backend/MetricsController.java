@@ -48,11 +48,11 @@ public class MetricsController {
         Point point = Point.measurement("user_metrics")
                 .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
                 .addField("username", username)
-                .addField("heartrate", heartrate)
-                .addField("latitude", latitude)
-                .addField("longitude", longitude)
-                .addField("current_speed", current_speed)
-                .addField("average_speed", average_speed)
+                .addField("heartrate", Integer.valueOf(heartrate))
+                .addField("latitude", Float.valueOf(latitude))
+                .addField("longitude", Float.valueOf(longitude))
+                .addField("current_speed", Float.valueOf(current_speed))
+                .addField("average_speed", Float.valueOf(average_speed))
                 .build();
 
         BatchPoints batchPoints = BatchPoints
