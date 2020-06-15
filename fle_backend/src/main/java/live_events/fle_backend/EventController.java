@@ -32,7 +32,7 @@ public class EventController {
             } else if (time != null && time.equals("future")) {
                 return this.jdbcTemplate.queryForList("SELECT * FROM Events WHERE Date > CURDATE();");
             } else {
-                return this.jdbcTemplate.queryForList("SELECT * FROM Events;");
+                return this.jdbcTemplate.queryForList("SELECT * from Events where DATE_FORMAT(Date, \"%y-%m-%d\") = CURDATE()");
             }
         }
     }

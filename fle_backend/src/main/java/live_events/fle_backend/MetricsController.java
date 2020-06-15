@@ -32,7 +32,12 @@ public class MetricsController {
      */
 
     @GetMapping("/userMetrics")
-    public QueryResult getMetrics() {
+    public QueryResult getMetrics(@RequestParam(value = "username", required = false) String username) {
+        if (username != null) {
+            Query queryMetrics = new Query("Select * from user_metrics where username='" + username + "'", "metrics");
+
+            return influxDB.query(queryMetrics);
+        }
         Query queryMetrics = new Query("Select * from user_metrics", "metrics");
 
         return influxDB.query(queryMetrics);
