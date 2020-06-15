@@ -46,11 +46,11 @@ class Consumer {
             String id = message.split(" ")[1];
             List<Map<String, Object>> emails = this.jdbcTemplate.queryForList("SELECT Email from Users u JOIN" +
                     " UsersRole r on u.Username = r.Username and r.EventId = ? and r.Role != 'Organizer';", id);
-            for (int i = 0; i < emails.size(); i++) {
-                Map.Entry<String, Object> entry = emails.get(i).entrySet().iterator().next();
-                System.out.println(entry.getValue().toString());
-                sendEmail(entry.getValue().toString());
-            }
+//            for (int i = 0; i < emails.size(); i++) {
+//                Map.Entry<String, Object> entry = emails.get(i).entrySet().iterator().next();
+//                System.out.println(entry.getValue().toString());
+//                sendEmail(entry.getValue().toString());
+//            }
             this.jdbcTemplate.update("DELETE from Events WHERE Id=?", id);
             this.jdbcTemplate.update("DELETE from UsersRole WHERE EventId=?", id);
         }
