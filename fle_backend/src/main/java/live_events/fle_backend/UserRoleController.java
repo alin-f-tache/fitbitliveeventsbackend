@@ -30,13 +30,13 @@ public class UserRoleController {
                                                   @RequestParam(value = "participants_list", required = false) String participant_list) {
         if (invitation_role != null) {
             return this.jdbcTemplate.queryForList("SELECT *" +
-                    " from UsersRole WHERE EventId=? AND Role = ?", id, role);
+                    " from UsersRole WHERE EventId=? AND Role = ? AND Invitation=1", id, invitation_role);
         }
 
         if (distribution_role != null) {
             return this.jdbcTemplate.queryForList("SELECT count(*) as Number, MONTH(Date) as Month" +
                     " from UsersRole WHERE Username=? AND Role = ?" +
-                    " GROUP BY Date;", username, distribution_role);
+                    " GROUP BY MONTH(Date);", username, distribution_role);
         }
 
         if (participant_list != null) {

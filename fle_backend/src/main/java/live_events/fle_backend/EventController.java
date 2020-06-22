@@ -77,9 +77,16 @@ public class EventController {
     }
 
     @DeleteMapping("/events")
-    public String deleteEvent(@RequestParam(value = "id", defaultValue = "1234") String id) {
-        this.jdbcTemplate.update("DELETE FROM Events WHERE Id = ?", id);
-        producer.sendEmail(new SampleMessage(0, "DELETE: " + id));
+    public String deleteEvent(@RequestParam(value = "id", defaultValue = "1234") String id,
+            @RequestParam(value = "demo", required = false) String demo) {
+        if(demo == null) {
+            producer.sendEmail(new SampleMessage(0, "DELETE: " + id));
+        } else {
+            this.jdbcTemplate.update("DELETE FROM Events WHERE Id = ?", id);
+            this.jdbcTemplate.update("DELETE from EventRoute WHERE EventId = ?", id);
+            this.jdbcTemplate.update("DELETE from UsersRole WHERE EventId = ?", id);
+            this.jdbcTemplate.update("DELETE from UsersRank;");
+        }
         return "Succes";
     }
 }

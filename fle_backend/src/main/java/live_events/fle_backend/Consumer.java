@@ -29,7 +29,7 @@ class Consumer {
         msg.setTo(email);
 
         msg.setSubject("Event canceled");
-        msg.setText("We are sorry to inform you that one of the events you signed for was canceled. \n\n\n\n" +
+        msg.setText("We are sorry to inform you that one of the event you signed for was canceled. \n\n\n\n" +
                 "Fitbit Live Events Team");
 
 
@@ -42,17 +42,22 @@ class Consumer {
                                @Header(KafkaHeaders.RECEIVED_PARTITION_ID) List<Integer> partitions,
                                @Header(KafkaHeaders.RECEIVED_TOPIC) List<String> topics,
                                @Header(KafkaHeaders.OFFSET) List<Long> offsets) {
+        System.out.println(message);
         if ("DELETE:".equals(message.split(" ")[0])) {
             String id = message.split(" ")[1];
+            System.out.println("Sending...");
             List<Map<String, Object>> emails = this.jdbcTemplate.queryForList("SELECT Email from Users u JOIN" +
                     " UsersRole r on u.Username = r.Username and r.EventId = ? and r.Role != 'Organizer';", id);
-//            for (int i = 0; i < emails.size(); i++) {
-//                Map.Entry<String, Object> entry = emails.get(i).entrySet().iterator().next();
-//                System.out.println(entry.getValue().toString());
-//                sendEmail(entry.getValue().toString());
-//            }
-            this.jdbcTemplate.update("DELETE from Events WHERE Id=?", id);
-            this.jdbcTemplate.update("DELETE from UsersRole WHERE EventId=?", id);
+            System.out.println(emails);
+            for (int i = 0; i < emails.size(); i++) {
+                Map.Entry<String, Object> entry = emails.get(i).entrySet().iterator().next();
+                System.out.println(entry.getValue().toString());
+                sendEmail(entry.getValue().toString());
+            }
+            this.jdbcTemplate.update("DELETE FROM Events WHERE Id = ?", id);
+            this.jdbcTemplate.update("DELETE from EventRoute WHERE EventId = ?", id);
+            this.jdbcTemplate.update("DELETE from UsersRole WHERE EventId = ?", id);
+            this.jdbcTemplate.update("DELETE from UsersRank;");
         }
         System.out.println(message);
     }
