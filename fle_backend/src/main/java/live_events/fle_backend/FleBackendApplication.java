@@ -1,5 +1,6 @@
 package live_events.fle_backend;
 
+import com.google.api.client.util.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
@@ -11,9 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.client.RestTemplate;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.*;
@@ -174,8 +173,22 @@ public class FleBackendApplication {
                 calendar.setTime(date);
                 calendar.add(Calendar.DATE, 1);
                 Date today = calendar.getTime();
+
+                calendar.setTime(today);   // assigns calendar to given date
+                Integer start_hour = calendar.get(Calendar.HOUR_OF_DAY); // gets hour in 24h format// gets hour in 12h format
+                Integer start_minutes =  calendar.get(Calendar.MINUTE);
+                calendar.add(Calendar.MINUTE, 5);
+
+                Date day = calendar.getTime();
+                calendar.setTime(day);
+                Integer end_hour =  calendar.get(Calendar.HOUR_OF_DAY); // gets hour in 24h format// gets hour in 12h format
+                Integer end_minutes =  calendar.get(Calendar.MINUTE);
+
+
                 System.out.println(this.mockMvc.perform(post("/events?id=0002&title=Demo&date=" +
                         formatter.format(today) + "" +
+                        "&starttime=" + start_hour.toString() + ":" + start_minutes.toString() +
+                        "&endtime=" + end_hour.toString() + ":" + end_minutes.toString() +
                         "&username=anacalin" +
                         "&street=Elena Vacarescu&number=1" +
                         "&description=See you there! ^^")
@@ -239,8 +252,18 @@ public class FleBackendApplication {
                             .andReturn().getResponse().getContentAsString());
                     TimeUnit.SECONDS.sleep(1);
                 }
+                System.out.println(this.mockMvc.perform(put("/events?id=0002&title=Demo&date=" +
+                        formatter.format(today) + "" +
+                        "&starttime=" + start_hour.toString() + ":" + start_minutes.toString() +
+                        "&endtime=" + end_hour.toString() + ":" + end_minutes.toString() +
+                        "&username=anacalin" +
+                        "&street=Elena Vacarescu&number=1" +
+                        "&description=See you there! ^^" +
+                        "&hashappened=1")
+                        .header("Authorization", "Bearer " + key))
+                        .andReturn().getResponse().getContentAsString());
 
-                TimeUnit.SECONDS.sleep(30);
+                TimeUnit.SECONDS.sleep(60);
                 System.out.println(this.mockMvc.perform(delete("/events?id=0002&demo=True")
                         .header("Authorization", "Bearer " + key))
                         .andReturn().getResponse().getContentAsString());

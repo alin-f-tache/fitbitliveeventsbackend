@@ -21,7 +21,7 @@ public class UsersRankController {
 
     }
 
-    @GetMapping("/users_rank")
+    @GetMapping("/usersRank")
     public List<Map<String, Object>> getEvent(@RequestParam(value = "username", required = false) String username,
                                               @RequestParam(value = "check_finish", required = false) String finish) {
         if (finish != null) {

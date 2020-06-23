@@ -28,11 +28,11 @@ public class EventController {
             return this.jdbcTemplate.queryForList("SELECT * FROM Events WHERE Id = ?", id);
         } else {
             if (time != null && time.equals("past")) {
-                return this.jdbcTemplate.queryForList("SELECT * FROM Events WHERE Date < CURDATE();");
+                return this.jdbcTemplate.queryForList("SELECT * FROM Events WHERE Date < CURDATE() OR HasHappend=1;");
             } else if (time != null && time.equals("future")) {
                 return this.jdbcTemplate.queryForList("SELECT * FROM Events WHERE Date > CURDATE();");
             } else {
-                return this.jdbcTemplate.queryForList("SELECT * from Events where DATE_FORMAT(Date, \"%y-%m-%d\") = CURDATE()");
+                return this.jdbcTemplate.queryForList("SELECT * from Events where DATE_FORMAT(Date, \"%y-%m-%d\") = CURDATE() AND HasHappend=0");
             }
         }
     }
@@ -48,7 +48,7 @@ public class EventController {
                             @RequestParam(value = "participantsnumber", defaultValue = "10") String participantsNumber,
                             @RequestParam(value = "description", defaultValue = "Maraton Herastrau - Cismigiu") String description,
                             @RequestParam(value = "date", defaultValue = "2020-12-12") @DateTimeFormat(pattern="yyyy-MM-dd") Date date,
-                            @RequestParam(value = "hashapenned", defaultValue = "0") String hasHappened,
+                            @RequestParam(value = "hashappened", defaultValue = "0") String hasHappened,
                             @RequestParam(value = "type", defaultValue = "Marathon") String type,
                             @RequestParam(value = "username", defaultValue = "user_1") String username) {
         this.jdbcTemplate.update("INSERT INTO Events VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
@@ -68,8 +68,9 @@ public class EventController {
                            @RequestParam(value = "participantsnumber", defaultValue = "10") String participantsNumber,
                            @RequestParam(value = "description", defaultValue = "Maraton Herastrau - Cismigiu") String description,
                            @RequestParam(value = "date", defaultValue = "2020-12-12") @DateTimeFormat(pattern="yyyy-MM-dd") Date date,
-                           @RequestParam(value = "hashapenned", defaultValue = "0") String hasHappened,
+                           @RequestParam(value = "hashappened", defaultValue = "0") String hasHappened,
                            @RequestParam(value = "type", defaultValue = "Marathon") String type) {
+        System.out.println(hasHappened);
         this.jdbcTemplate.update("UPDATE Events SET Title = ?, City = ?, Street = ?, Number = ?, StartTime = ?," +
                         "EndTime = ?, ParticipantsNumber = ?, Description = ?, Date = ?, HasHappend = ?, Type = ? WHERE Id = ?",
                 title, city, street, number, startTime, endTime, participantsNumber, description, date, hasHappened, type, id);

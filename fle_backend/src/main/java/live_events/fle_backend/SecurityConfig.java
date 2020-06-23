@@ -49,6 +49,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .mvcMatchers("/authenticate").permitAll()
                     .mvcMatchers(HttpMethod.POST, "/users").permitAll()
                     .mvcMatchers(HttpMethod.GET, "/events").permitAll()
+                    .mvcMatchers(HttpMethod.GET, "/userMetrics").permitAll()
+                    .mvcMatchers(HttpMethod.GET, "/eventRoutes").permitAll()
+                    .mvcMatchers(HttpMethod.GET, "/userRoles").permitAll()
+                    .mvcMatchers(HttpMethod.GET, "/usersRank").permitAll()
                     .anyRequest().authenticated()
                     .and()
                     .oauth2ResourceServer().jwt();

@@ -94,7 +94,7 @@ public class MetricsController {
         OkHttpClient.Builder okHttpClient = UnsafeOkHttpClient.getUnsafeOkHttpClient();
 
         influxDB = InfluxDBFactory.connect(
-                "https://34.106.36.59:8086/", "admin", "root", okHttpClient);
+                "https://34.106.229.28:8086/", "admin", "root", okHttpClient);
         this.finished = new ArrayList<>();
     }
 
